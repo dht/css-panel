@@ -17,6 +17,11 @@ npm install style-panel
 
 Here is a quick example to get you started:
 
+Add icon font to header:
+```html
+<link href="//fonts.googleapis.com/css?family=Material+Icons" rel="stylesheet">
+```
+
 **Import**
 ```jsx
  import StylePanel from 'style-panel/StylePanel';
