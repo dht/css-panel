@@ -60,7 +60,7 @@ gulp.task('cleanDocs', function () {
 
 gulp.task('copyDocs', function () {
     return gulp
-        .src(['app/index.html'], {base: './app'})
+        .src(['app/index.html', 'app/fonts/**/*'], {base: './app'})
         .pipe(gulp.dest('docs'));
 });
 
