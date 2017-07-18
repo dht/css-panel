@@ -18,6 +18,8 @@ class StyleGrid extends React.Component {
     }
 
     render() {
+        const {readonly} = this.props;
+
         return (
             <div style={styles.container}>
                 {Object.keys(this.state.attributes)
@@ -27,13 +29,12 @@ class StyleGrid extends React.Component {
                     .map((key, index) => {
                         const attribute = this.state.attributes[key];
                         return (
-                            <div key={key} style={styles.attribute}
+                            <div key={key} style={{...styles.attribute, cursor: readonly ? '' : 'pointer'}}
                                  onClick={() => this.props.commandSelected(key)}
                                  onContextMenu={(ev) => {
                                      ev.preventDefault();
                                      this.props.keyReset(key)
-                                 }}
-                                 className={'hover'}>
+                                 }}>
                                 <div style={styles.number}>
                                     {attribute.index}
                                 </div>
@@ -64,7 +65,6 @@ const styleSmall = {
         height: "40px",
         position: "relative",
         outline: "none",
-        cursor: "pointer",
         fontWeight: 'lighter',
         width: '33%',
         color: '#fff',

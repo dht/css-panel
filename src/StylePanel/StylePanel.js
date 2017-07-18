@@ -35,6 +35,7 @@ export default class StylePanel extends React.Component {
 
         this.delayedState = this.delayedState.bind(this);
 
+        this.renderPanel = this.renderPanel.bind(this);
         this.focusOnCommander = this.focusOnCommander.bind(this);
     }
 
@@ -108,7 +109,7 @@ export default class StylePanel extends React.Component {
         this.setState({
             value: '',
             originalValue: '',
-            attribute:{key:'', attributeType:''},
+            attribute: {key: '', attributeType: ''},
         });
 
         this.focusOnCommander();
@@ -171,12 +172,14 @@ export default class StylePanel extends React.Component {
     }
 
     renderStyleGrid() {
-        const {styleId, elementStyle} = this.props;
+        const {styleId, elementStyle, readonly} = this.props;
 
         return <div style={styles.helperPanel}>
             {styleId ? <StyleGrid
                 elementStyle={elementStyle} commandSelected={this.commandSelected}
-                keyReset={this.keyReset}/> : null}
+                keyReset={this.keyReset}
+                readonly={readonly}
+            /> : null}
         </div>
     }
 
@@ -250,46 +253,53 @@ export default class StylePanel extends React.Component {
         }, delay);
     }
 
+    renderPanel() {
+        const {iconName = 'select_all', readonly} = this.props;
+
+        if (readonly) {
+            return null;
+        }
+
+        return <div style={ styles.rowContainer }>
+            <div style={ styles.commander }>
+                <Commander placeholder={'attribute [shift]'}
+                           onFocus={() => this.delayedState({focusOnAttribute: true})}
+                           onBlur={() => this.delayedState({focusOnAttribute: false})}
+                           attribute={this.state.attribute}
+                           commandSelected={this.commandSelected}/>
+            </div>
+            <Magic style={styles.magic} attribute={this.state.attribute}
+                   value={this.state.value}
+                   onFocus={() => this.setState({focusOnValue: true})}
+                   onBlur={() => this.setState({focusOnValue: false})}
+                   escapePressed={ this.resetValue }
+                   valueChange={this.valueChange}/>
+
+            <IconButton iconStyle={styles.buttonWhite} onClick={this.saveValue}
+                        style={ styles.buttonWrapper }
+                        title="Save value (Enter)"
+                        iconClassName="material-icons">
+                done
+            </IconButton>
+
+            <IconButton iconStyle={styles.buttonWhite} onClick={this.resetValue}
+                        style={ styles.buttonWrapper }
+                        iconClassName="material-icons">
+                close
+            </IconButton>
+            <div style={ styles.icon }>
+                <i className="material-icons">{ iconName }</i>
+            </div>
+        </div>
+    }
+
     render() {
-        const {iconName = 'select_all'} = this.props;
 
         return (
             <div style={ styles.container }>
-                <div style={ styles.rowContainer }>
-                    <div style={ styles.commander }>
-                        <Commander placeholder={'attribute [shift]'}
-                                   onFocus={() => this.delayedState({focusOnAttribute: true})}
-                                   onBlur={() => this.delayedState({focusOnAttribute: false})}
-                                   attribute={this.state.attribute}
-                                   commandSelected={this.commandSelected}/>
-                    </div>
-                    <Magic style={styles.magic} attribute={this.state.attribute}
-                           value={this.state.value}
-                           onFocus={() => this.setState({focusOnValue: true})}
-                           onBlur={() => this.setState({focusOnValue: false})}
-                           escapePressed={ this.resetValue }
-                           valueChange={this.valueChange}/>
 
-                    <IconButton iconStyle={styles.buttonWhite} onClick={this.saveValue}
-                                style={ styles.buttonWrapper }
-                                title="Save value (Enter)"
-                                iconClassName="material-icons">
-                        done
-                    </IconButton>
-
-                    <IconButton iconStyle={styles.buttonWhite} onClick={this.resetValue}
-                                style={ styles.buttonWrapper }
-                                iconClassName="material-icons">
-                        close
-                    </IconButton>
-                    <div style={ styles.icon }>
-                        <i className="material-icons">{ iconName }</i>
-                    </div>
-                </div>
-
-                {
-                    this.renderHelper()
-                }
+                {this.renderPanel()}
+                {this.renderHelper()}
 
             </div>
         );

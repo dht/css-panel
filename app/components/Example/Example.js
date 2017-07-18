@@ -15,13 +15,13 @@ export default class Example extends React.Component {
                 color: 'green',
                 fontFamily: 'arial',
                 fontWeight: 100,
-                fontSize:'16px',
+                fontSize: '16px',
                 backgroundSize: 'cover',
             },
             style2: {
-                backgroundColor:'green',
-                color:'white',
-                fontSize:'15px',
+                backgroundColor: 'green',
+                color: 'white',
+                fontSize: '15px',
             }
         }
     }
@@ -59,13 +59,14 @@ export default class Example extends React.Component {
     }
 
     render() {
-        const {style, style1,style2,elementId, hideStyleGrid} = this.state;
+        const {style, style1, style2, elementId, hideStyleGrid} = this.state;
 
         return (
-            <div>
+            <div className="Example-container">
                 <div style={styles.attributesPanel}>
                     <StylePanel
                         styleId={ elementId }
+                        readonly={false}
                         elementStyle={ style }
                         hideStyleGrid={hideStyleGrid}
                         applyStyle={(style) => this.applyStyle(style)}
@@ -74,12 +75,21 @@ export default class Example extends React.Component {
                         iconName={'select_all'}    // select_all, text_format, image, view_column
                     />
                 </div>
+                <div className="guidance">
+                    <div className="arrow">H</div>
+                    change the attributes
+                </div>
+
                 <div style={styles.elements}>
-                    <div style={{...styles.element, ...style1}} onClick={()=> this.setState({elementId: 1,style:style1})}>
-                        Element 1
+                    <div style={{...styles.element, ...style1, ...elementId === 1 ? styles.selected : {}}}
+                         onClick={() => this.setState({elementId: 1, style: style1})}>
+                        Element 1 <br />
+                        click to select
                     </div>
-                    <div style={{...styles.element, ...style2}} onClick={()=> this.setState({elementId: 2,style:style2})}>
-                        Element 2
+                    <div style={{...styles.element, ...style2, ...elementId === 2 ? styles.selected : {}}}
+                         onClick={() => this.setState({elementId: 2, style: style2})}>
+                        Element 2 <br />
+                        click to select
                     </div>
                 </div>
             </div>
@@ -89,15 +99,15 @@ export default class Example extends React.Component {
 
 const styles = {
     attributesPanel: {
-width: '400px',
-position: 'fixed',
-top: 0,
-left: 0,
-marginLeft: '60px',
-zIndex: 999,
-backgroundColor: 'white',
-boxShadow: '0 0 5px rgba(0,0,0,0.1)',
-borderRadius: '1px',
+        width: '400px',
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        marginLeft: '60px',
+        zIndex: 999,
+        backgroundColor: 'white',
+        boxShadow: '0 0 5px rgba(0,0,0,0.1)',
+        borderRadius: '1px',
     },
     elements: {
         width: '500px',
@@ -107,12 +117,17 @@ borderRadius: '1px',
         left: '50%',
         marginLeft: '-250px',
         marginTop: '-100px',
-        display:'flex',
-        flexDirection:'row',
+        display: 'flex',
+        flexDirection: 'row',
     },
     element: {
-        cursor:'pointer',
-        flex:1,
-        margin:'10px',
+        cursor: 'pointer',
+        flex: 1,
+        margin: '10px',
+        border: '3px solid transparent',
+        boxSizing:'border-box',
+    },
+    selected: {
+        border: '3px solid red',
     }
 }
